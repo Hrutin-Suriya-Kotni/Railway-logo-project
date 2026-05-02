@@ -1,6 +1,7 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import UploadForm from "./components/UploadForm.jsx";
 import ProgressDisplay from "./components/ProgressDisplay.jsx";
+import PredictionGallery from "./components/PredictionGallery.jsx";
 import useJobWebSocket from "./hooks/useJobWebSocket.js";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
@@ -11,14 +12,28 @@ function App() {
   const [status, setStatus] = useState("idle");
   const [progress, setProgress] = useState(0);
   const [resultPath, setResultPath] = useState("");
+  const [resultData, setResultData] = useState(null);
   const [error, setError] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+
+  const fetchResults = useCallback(async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/storage/results/${id}.json`);
+      if (response.ok) {
+        const data = await response.json();
+        setResultData(data);
+      }
+    } catch (err) {
+      console.error("Failed to fetch results", err);
+    }
+  }, []);
 
   const handleUpload = useCallback(async (file) => {
     setError("");
     setStatus("uploading");
     setProgress(0);
     setResultPath("");
+    setResultData(null);
     setIsUploading(true);
 
     try {
@@ -59,16 +74,27 @@ function App() {
       setStatus("done");
       setProgress(100);
       setResultPath(message.result_path || "");
+      if (message.job_id) {
+        fetchResults(message.job_id);
+      }
     }
-  }, []);
+  }, [fetchResults]);
+
+  const handleWebSocketError = useCallback((wsError) => {
+    console.error(wsError);
+    if (status !== "done") {
+      setError(wsError);
+    }
+  }, [status]);
 
   const shouldReconnect = status !== "done" && status !== "idle";
+
   const connectionState = useJobWebSocket({
     jobId,
     wsBaseUrl: WS_BASE_URL,
     shouldReconnect,
     onMessage: handleMessage,
-    onError: (wsError) => setError(wsError),
+    onError: handleWebSocketError,
   });
 
   return (
@@ -89,6 +115,13 @@ function App() {
       />
 
       {error && <p className="app__error">Error: {error}</p>}
+
+      {status === "done" && resultData && (
+        <PredictionGallery 
+          pages={resultData.pages} 
+          resultsUrl={`${API_BASE_URL}/storage/results/${jobId}.json`}
+        />
+      )}
     </div>
   );
 }
