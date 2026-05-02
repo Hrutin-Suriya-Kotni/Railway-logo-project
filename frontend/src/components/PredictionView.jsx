@@ -9,17 +9,10 @@ function PredictionView({ image_url, detections, showBoxes }) {
         maxScale={8}
         centerOnInit={true}
       >
-        {({ zoomIn, zoomOut, resetTransform }) => (
-          <>
-            <div className="prediction-controls">
-              <button onClick={() => zoomIn()}>Zoom In</button>
-              <button onClick={() => zoomOut()}>Zoom Out</button>
-              <button onClick={() => resetTransform()}>Reset</button>
-            </div>
-            <TransformComponent
-              wrapperStyle={{ width: "100%", height: "auto" }}
-              contentStyle={{ width: "100%" }}
-            >
+        <TransformComponent
+          wrapperStyle={{ width: "100%", height: "auto" }}
+          contentStyle={{ width: "100%" }}
+        >
               <div className="prediction-container">
                 <img
                   src={image_url}
@@ -48,9 +41,7 @@ function PredictionView({ image_url, detections, showBoxes }) {
                     );
                   })}
               </div>
-            </TransformComponent>
-          </>
-        )}
+        </TransformComponent>
       </TransformWrapper>
     </div>
   );
