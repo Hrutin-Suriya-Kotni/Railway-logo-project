@@ -1,0 +1,12 @@
+{
+  "job_id": "98f092535eb746f497aa85923246d578",
+  "status": "done",
+  "pages": [
+    {
+      "page": 1,
+      "image_url": "/storage/images/98f092535eb746f497aa85923246d578/page_1.jpg",
+      "detected_image_url": "/storage/images/98f092535eb746f497aa85923246d578/page_1_detected.jpg",
+      "detections": []
+    }
+  ]
+}

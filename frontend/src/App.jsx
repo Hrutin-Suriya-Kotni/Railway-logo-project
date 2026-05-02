@@ -100,8 +100,11 @@ function App() {
   return (
     <div className="app">
       <header className="app__header">
-        <h1>Async PDF Processing</h1>
-        <p>Upload a PDF to start asynchronous inference.</p>
+        <div className="header__brand">
+          <h1>CHITRA</h1>
+          <span className="header__tagline">Advanced Railway Logo Recognition</span>
+        </div>
+        <p>Intelligent asynchronous PDF processing for railway documentation.</p>
       </header>
 
       <UploadForm onUpload={handleUpload} disabled={isUploading} />

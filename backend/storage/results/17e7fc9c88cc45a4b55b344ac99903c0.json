@@ -1,0 +1,285 @@
+{
+  "job_id": "17e7fc9c88cc45a4b55b344ac99903c0",
+  "status": "done",
+  "pages": [
+    {
+      "page": 1,
+      "detections": [
+        {
+          "label": "RCC_logo",
+          "confidence": 0.621,
+          "bbox": {
+            "x": 0.5301,
+            "y": 0.5565,
+            "width": 0.0867,
+            "height": 0.074
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.545,
+          "bbox": {
+            "x": 0.3159,
+            "y": 0.5353,
+            "width": 0.0714,
+            "height": 0.0774
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.286,
+          "bbox": {
+            "x": 0.3156,
+            "y": 0.5354,
+            "width": 0.0732,
+            "height": 0.0783
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.251,
+          "bbox": {
+            "x": 0.0345,
+            "y": 0.4055,
+            "width": 0.0588,
+            "height": 0.0656
+          }
+        }
+      ]
+    },
+    {
+      "page": 2,
+      "detections": []
+    },
+    {
+      "page": 3,
+      "detections": [
+        {
+          "label": "RCC_logo",
+          "confidence": 0.903,
+          "bbox": {
+            "x": 0.6555,
+            "y": 0.7543,
+            "width": 0.0846,
+            "height": 0.0987
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.852,
+          "bbox": {
+            "x": 0.7208,
+            "y": 0.6584,
+            "width": 0.0851,
+            "height": 0.0949
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.597,
+          "bbox": {
+            "x": 0.6002,
+            "y": 0.768,
+            "width": 0.0541,
+            "height": 0.0795
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.555,
+          "bbox": {
+            "x": 0.6472,
+            "y": 0.6614,
+            "width": 0.0455,
+            "height": 0.0839
+          }
+        }
+      ]
+    },
+    {
+      "page": 4,
+      "detections": [
+        {
+          "label": "RCC_logo",
+          "confidence": 0.796,
+          "bbox": {
+            "x": 0.0727,
+            "y": 0.6535,
+            "width": 0.1125,
+            "height": 0.1329
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.778,
+          "bbox": {
+            "x": 0.0617,
+            "y": 0.8872,
+            "width": 0.0763,
+            "height": 0.0853
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.654,
+          "bbox": {
+            "x": 0.5202,
+            "y": 0.3864,
+            "width": 0.0575,
+            "height": 0.0854
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.644,
+          "bbox": {
+            "x": 0.3924,
+            "y": 0.7546,
+            "width": 0.1252,
+            "height": 0.1102
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.607,
+          "bbox": {
+            "x": 0.3298,
+            "y": 0.8818,
+            "width": 0.0901,
+            "height": 0.0918
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.354,
+          "bbox": {
+            "x": 0.5733,
+            "y": 0.7723,
+            "width": 0.0582,
+            "height": 0.0825
+          }
+        }
+      ]
+    },
+    {
+      "page": 5,
+      "detections": [
+        {
+          "label": "RCC_logo",
+          "confidence": 0.803,
+          "bbox": {
+            "x": 0.6641,
+            "y": 0.7595,
+            "width": 0.0787,
+            "height": 0.0922
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.734,
+          "bbox": {
+            "x": 0.411,
+            "y": 0.7759,
+            "width": 0.0678,
+            "height": 0.0728
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.658,
+          "bbox": {
+            "x": 0.5993,
+            "y": 0.7749,
+            "width": 0.0656,
+            "height": 0.0796
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.658,
+          "bbox": {
+            "x": 0.0823,
+            "y": 0.2881,
+            "width": 0.0935,
+            "height": 0.1148
+          }
+        }
+      ]
+    },
+    {
+      "page": 6,
+      "detections": [
+        {
+          "label": "RCC_logo",
+          "confidence": 0.426,
+          "bbox": {
+            "x": 0.0643,
+            "y": 0.8896,
+            "width": 0.0794,
+            "height": 0.0813
+          }
+        }
+      ]
+    },
+    {
+      "page": 7,
+      "detections": [
+        {
+          "label": "RCC_logo",
+          "confidence": 0.482,
+          "bbox": {
+            "x": 0.6581,
+            "y": 0.7519,
+            "width": 0.0836,
+            "height": 0.1075
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.445,
+          "bbox": {
+            "x": 0.6047,
+            "y": 0.7744,
+            "width": 0.0601,
+            "height": 0.0873
+          }
+        }
+      ]
+    },
+    {
+      "page": 8,
+      "detections": [
+        {
+          "label": "RCC_logo",
+          "confidence": 0.917,
+          "bbox": {
+            "x": 0.4204,
+            "y": 0.7649,
+            "width": 0.0705,
+            "height": 0.087
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.667,
+          "bbox": {
+            "x": 0.6169,
+            "y": 0.7692,
+            "width": 0.0654,
+            "height": 0.0822
+          }
+        },
+        {
+          "label": "RCC_logo",
+          "confidence": 0.294,
+          "bbox": {
+            "x": 0.0674,
+            "y": 0.671,
+            "width": 0.1126,
+            "height": 0.1308
+          }
+        }
+      ]
+    }
+  ]
+}

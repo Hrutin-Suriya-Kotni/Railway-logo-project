@@ -6,23 +6,30 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 function PredictionGallery({ pages, resultsUrl }) {
   const [viewMode, setViewMode] = useState("compare"); // 'original' or 'compare'
 
+  const triggerDownload = async (url, filename) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error("Download failed", err);
+    }
+  };
+
   const handleDownload = () => {
     if (!resultsUrl) return;
-    const link = document.createElement("a");
-    link.href = resultsUrl;
-    link.download = "predictions.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    triggerDownload(resultsUrl, "predictions.json");
   };
 
   const downloadImage = (url, filename) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    triggerDownload(url, filename);
   };
 
   return (
