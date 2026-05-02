@@ -7,6 +7,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, File, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from utils.filesystem import ensure_dir
 from utils.job_store import JobStore
@@ -18,9 +19,11 @@ BASE_DIR = Path(__file__).resolve().parent
 STORAGE_DIR = BASE_DIR / "storage"
 UPLOAD_DIR = STORAGE_DIR / "uploads"
 RESULTS_DIR = STORAGE_DIR / "results"
+IMAGES_DIR = STORAGE_DIR / "images"
 
 ensure_dir(UPLOAD_DIR)
 ensure_dir(RESULTS_DIR)
+ensure_dir(IMAGES_DIR)
 
 app = FastAPI(title="Async PDF Processor")
 app.add_middleware(
@@ -30,6 +33,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/storage", StaticFiles(directory=STORAGE_DIR), name="storage")
 
 job_store = JobStore()
 
