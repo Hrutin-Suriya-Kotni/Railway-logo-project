@@ -1,0 +1,77 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
+  background: #f7f8fb;
+  color: #1f2a44;
+}
+
+.app {
+  max-width: 720px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(31, 42, 68, 0.08);
+}
+
+.app__header h1 {
+  margin: 0 0 8px;
+}
+
+.upload-form {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin: 24px 0;
+}
+
+.upload-form__label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.upload-form button {
+  padding: 10px 16px;
+  border: none;
+  background: #3758f9;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.upload-form button:disabled {
+  background: #9aa7d8;
+  cursor: not-allowed;
+}
+
+.progress-card {
+  border: 1px solid #e4e7f5;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.progress-bar {
+  height: 12px;
+  background: #e5e9ff;
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: #4b7cfb;
+  transition: width 0.2s ease;
+}
+
+.progress-card__meta {
+  font-size: 0.9rem;
+  color: #516080;
+}
+
+.app__error {
+  margin-top: 16px;
+  color: #c0392b;
+}
