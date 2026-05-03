@@ -6,6 +6,7 @@ dist/
 build/
 .DS_Store
 
+backend/test_sathi.py
 backend/storage/images/
 backend/storage/results/
 backend/storage/uploads/
