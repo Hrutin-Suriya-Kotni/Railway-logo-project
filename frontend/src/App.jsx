@@ -102,9 +102,9 @@ function App() {
       <header className="app__header">
         <div className="header__brand">
           <h1>CHITRA</h1>
-          <span className="header__tagline">Advanced Railway Logo Recognition</span>
+          <span className="header__tagline">Logo RCC box Recognition</span>
         </div>
-        <p>Intelligent asynchronous PDF processing for railway documentation.</p>
+        <p>Intelligent computer vision model for processing PDF's of railway documentation.</p>
       </header>
 
       <UploadForm onUpload={handleUpload} disabled={isUploading} />
@@ -120,8 +120,8 @@ function App() {
       {error && <p className="app__error">Error: {error}</p>}
 
       {status === "done" && resultData && (
-        <PredictionGallery 
-          pages={resultData.pages} 
+        <PredictionGallery
+          pages={resultData.pages}
           resultsUrl={`${API_BASE_URL}/storage/results/${jobId}.json`}
         />
       )}
