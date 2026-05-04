@@ -21,8 +21,15 @@ function UploadForm({ onUpload, disabled }) {
           disabled={disabled}
         />
       </label>
-      <button type="submit" disabled={!file || disabled}>
-        {disabled ? "Uploading..." : "Start Processing"}
+      <button type="submit" disabled={!file || disabled} className={disabled ? "btn--loading" : ""}>
+        {disabled ? (
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+            <span className="spinner"></span>
+            Processing...
+          </span>
+        ) : (
+          "Start Processing"
+        )}
       </button>
     </form>
   );

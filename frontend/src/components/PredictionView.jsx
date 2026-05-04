@@ -1,46 +1,44 @@
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-function PredictionView({ image_url, detections, showBoxes }) {
+function PredictionView({ image_url, detected_image_url, showBoxes, fullHeight = false }) {
+  const currentImage = showBoxes ? detected_image_url : image_url;
+
   return (
-    <div className="prediction-view">
+    <div className={`prediction-view ${fullHeight ? "prediction-view--full" : ""}`}>
       <TransformWrapper
         initialScale={1}
         minScale={0.5}
-        maxScale={8}
+        maxScale={10}
         centerOnInit={true}
       >
         <TransformComponent
-          wrapperStyle={{ width: "100%", height: "auto" }}
-          contentStyle={{ width: "100%" }}
+          wrapperStyle={{ 
+            width: "100%", 
+            height: fullHeight ? "100%" : "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+          contentStyle={{ 
+            width: "100%",
+            height: fullHeight ? "100%" : "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+          }}
         >
-              <div className="prediction-container">
-                <img
-                  src={image_url}
-                  alt="Prediction page"
-                  className="prediction-image"
-                />
-                {showBoxes &&
-                  detections.map((det, i) => {
-                    const { x, y, width, height } = det.bbox;
-                    return (
-                      <div
-                        key={i}
-                        className="bounding-box"
-                        style={{
-                          left: `${x * 100}%`,
-                          top: `${y * 100}%`,
-                          width: `${width * 100}%`,
-                          height: `${height * 100}%`,
-                        }}
-                        title={`${det.label} (${(det.confidence * 100).toFixed(1)}%)`}
-                      >
-                        <span className="bounding-box__label">
-                          {det.label} {(det.confidence * 100).toFixed(0)}%
-                        </span>
-                      </div>
-                    );
-                  })}
-              </div>
+          <div className="prediction-container">
+            <img
+              src={currentImage}
+              alt="Prediction page"
+              className="prediction-image"
+              style={{
+                maxWidth: "100%",
+                maxHeight: fullHeight ? "100%" : "none",
+                objectFit: "contain"
+              }}
+            />
+          </div>
         </TransformComponent>
       </TransformWrapper>
     </div>

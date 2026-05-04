@@ -1,10 +1,12 @@
 import { useState } from "react";
 import PredictionView from "./PredictionView.jsx";
+import PredictionModal from "./PredictionModal.jsx";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-function PredictionGallery({ pages, resultsUrl }) {
+function PredictionGallery({ pages, resultsUrl, totalPagesOriginal }) {
   const [viewMode, setViewMode] = useState("compare"); // 'original' or 'compare'
+  const [selectedPage, setSelectedPage] = useState(null);
 
   const triggerDownload = async (url, filename) => {
     try {
@@ -55,6 +57,12 @@ function PredictionGallery({ pages, resultsUrl }) {
         </div>
       </header>
 
+      {totalPagesOriginal > 1 && (
+        <div className="gallery__warning">
+          <strong>Note:</strong> Only the first page of the PDF was processed. The remaining {totalPagesOriginal - 1} pages were ignored.
+        </div>
+      )}
+
       <div className="gallery__list">
         {pages.map((pageData) => (
           <div key={pageData.page} className="prediction-item">
@@ -68,16 +76,27 @@ function PredictionGallery({ pages, resultsUrl }) {
                   Download Image with Boxes
                 </button>
               </div>
-              <p>{pageData.detections.length} objects detected</p>
+              <p>{pageData.detections.length} objects detected. Click image for detailed view.</p>
             </div>
-            <PredictionView
-              image_url={`${API_BASE_URL}${pageData.image_url}`}
-              detections={pageData.detections}
-              showBoxes={viewMode === "compare"}
-            />
+            <div className="prediction-item__preview" onClick={() => setSelectedPage(pageData)}>
+              <PredictionView
+                image_url={`${API_BASE_URL}${pageData.image_url}`}
+                detected_image_url={`${API_BASE_URL}${pageData.detected_image_url}`}
+                detections={pageData.detections}
+                showBoxes={viewMode === "compare"}
+              />
+            </div>
           </div>
         ))}
       </div>
+
+      {selectedPage && (
+        <PredictionModal
+          pageData={selectedPage}
+          apiBaseUrl={API_BASE_URL}
+          onClose={() => setSelectedPage(null)}
+        />
+      )}
     </section>
   );
 }

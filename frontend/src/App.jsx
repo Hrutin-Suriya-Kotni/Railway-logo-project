@@ -98,33 +98,53 @@ function App() {
   });
 
   return (
-    <div className="app">
-      <header className="app__header">
-        <div className="header__brand">
-          <h1>CHITRA</h1>
-          <span className="header__tagline">Logo RCC box Recognition</span>
+    <div className="site-wrapper">
+      <header className="site-header">
+        <div className="site-header__container">
+          <div className="header__brand">
+            <h1>CHITRA</h1>
+            <span className="header__tagline">Logo RCC box Recognition</span>
+          </div>
+          <nav className="site-nav">
+            <ul>
+              <li><a href="#" className="active">Dashboard</a></li>
+              <li><a href="#">History</a></li>
+              <li><a href="#">Settings</a></li>
+            </ul>
+          </nav>
         </div>
-        <p>Intelligent computer vision model for processing PDF's of railway documentation.</p>
       </header>
 
-      <UploadForm onUpload={handleUpload} disabled={isUploading} />
+      <main className="app">
+        <section className="app__intro">
+          <h2>PDF Inference Engine</h2>
+          <p>Upload your railway documentation PDF to identify and extract logo bounding boxes using our advanced YOLOv8 model.</p>
+        </section>
 
-      <ProgressDisplay
-        status={status}
-        progress={progress}
-        jobId={jobId}
-        resultPath={resultPath}
-        connectionState={connectionState}
-      />
+        <UploadForm onUpload={handleUpload} disabled={isUploading} />
 
-      {error && <p className="app__error">Error: {error}</p>}
-
-      {status === "done" && resultData && (
-        <PredictionGallery
-          pages={resultData.pages}
-          resultsUrl={`${API_BASE_URL}/storage/results/${jobId}.json`}
+        <ProgressDisplay
+          status={status}
+          progress={progress}
+          jobId={jobId}
+          resultPath={resultPath}
+          connectionState={connectionState}
         />
-      )}
+
+        {error && <p className="app__error">Error: {error}</p>}
+
+        {status === "done" && resultData && (
+          <PredictionGallery
+            pages={resultData.pages}
+            resultsUrl={`${API_BASE_URL}/storage/results/${jobId}.json`}
+            totalPagesOriginal={resultData.total_pages_original}
+          />
+        )}
+      </main>
+      
+      <footer className="site-footer">
+        <p>&copy; 2026 CHITRA Vision Systems. All rights reserved.</p>
+      </footer>
     </div>
   );
 }

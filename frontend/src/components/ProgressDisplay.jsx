@@ -35,9 +35,6 @@ function ProgressDisplay({
           WebSocket: {connectionState}
         </p>
       )}
-      {resultPath && (
-        <p className="progress-card__meta">Result saved at: {resultPath}</p>
-      )}
     </section>
   );
 }

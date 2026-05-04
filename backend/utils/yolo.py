@@ -55,7 +55,7 @@ def apply_nms(boxes, scores, iou_threshold=NMS_THRESHOLD):
 
 
 def run_sliced_inference(image: Image.Image, model: object) -> List[Dict[str, object]]:
-    """Run YOLO on slices and merge results."""
+    """Run YOLO on slices and merge results with class preservation."""
     w, h = image.size
     slices = get_slices(w, h, SLICE_WIDTH, SLICE_HEIGHT, OVERLAP)
     
@@ -65,14 +65,15 @@ def run_sliced_inference(image: Image.Image, model: object) -> List[Dict[str, ob
 
     for x1, y1, x2, y2 in slices:
         patch = image.crop((x1, y1, x2, y2))
-        results = model.predict(patch, verbose=False)
+        # Use imgsz=640 to match training for best accuracy on patches
+        results = model.predict(patch, verbose=False, imgsz=640)
         
         for res in results:
             if not hasattr(res, "boxes") or res.boxes is None:
                 continue
-            boxes = res.boxes.xyxy.cpu() # [N, 4]
-            scores = res.boxes.conf.cpu() # [N]
-            classes = res.boxes.cls.cpu() # [N]
+            boxes = res.boxes.xyxy.cpu()
+            scores = res.boxes.conf.cpu()
+            classes = res.boxes.cls.cpu()
             
             for box, score, cls in zip(boxes, scores, classes):
                 # Offset boxes back to global coordinates
@@ -90,19 +91,23 @@ def run_sliced_inference(image: Image.Image, model: object) -> List[Dict[str, ob
 
     boxes_tensor = torch.stack(all_boxes)
     scores_tensor = torch.tensor(all_scores)
-    merged_boxes, merged_scores = apply_nms(boxes_tensor, scores_tensor)
+    classes_tensor = torch.tensor(all_cls)
     
-    # We don't have the class labels in the merged output easily if we don't keep track.
-    # For now, let's just return the merged detections.
-    # (Assuming single class or similar enough for NMS)
+    # Run NMS per class for cleaner results (Standard YOLO behavior)
+    # We use batched_nms to handle multiple classes correctly
+    keep = ops.batched_nms(boxes_tensor, scores_tensor, classes_tensor, NMS_THRESHOLD)
+    
+    merged_boxes = boxes_tensor[keep]
+    merged_scores = scores_tensor[keep]
+    merged_classes = classes_tensor[keep]
     
     detections: List[Dict[str, object]] = []
     names = getattr(model, "names", {})
     
-    for box, score in zip(merged_boxes, merged_scores):
+    for box, score, cls in zip(merged_boxes, merged_scores, merged_classes):
         x1, y1, x2, y2 = box.tolist()
         detections.append({
-            "label": _label_for(names, 0), # Simplified for now
+            "label": _label_for(names, int(cls)),
             "confidence": round(float(score), 3),
             "bbox": {
                 "x": round(x1 / w, 4),
