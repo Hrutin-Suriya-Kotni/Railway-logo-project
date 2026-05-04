@@ -87,6 +87,12 @@ async def process_job(
             image_path = job_image_dir / image_filename
             detected_path = job_image_dir / detected_filename
             
+            # 0. Auto-rotate to landscape (horizontal) if the page is in portrait
+            w, h = img_high.size
+            if h > w:
+                logger.info(f"Auto-rotating page {index} to horizontal orientation...")
+                img_high = await asyncio.to_thread(img_high.rotate, 90, expand=True)
+
             # Save the high-res image
             await asyncio.to_thread(img_high.save, str(image_path), "JPEG", quality=95)
 

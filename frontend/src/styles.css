@@ -240,7 +240,8 @@ body {
   border: 2px solid #ef4444;
   box-sizing: border-box;
   pointer-events: none;
-  vector-effect: non-scaling-stroke; /* Keep borders thin during zoom */
+  vector-effect: non-scaling-stroke;
+  /* Keep borders thin during zoom */
   transition: border-color 0.2s;
 }
 
@@ -380,7 +381,8 @@ body {
 .modal-body {
   flex: 1;
   overflow: hidden;
-  background: #111827; /* Darker background for focus */
+  background: #111827;
+  /* Darker background for focus */
   display: flex;
   flex-direction: column;
 }
@@ -397,6 +399,7 @@ body {
   align-items: center;
   line-height: 0;
 }
+
 .btn--loading {
   cursor: wait;
   opacity: 0.8;
@@ -413,5 +416,151 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Gallery Actions Flow */
+.gallery-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.btn--secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn--secondary:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.app__error-container {
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.app__error {
+  color: #dc2626;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.gallery-container {
+  margin-top: 40px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 40px;
+}
+
+.gallery-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8fafc;
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin-bottom: 32px;
+  border: 1px solid #e2e8f0;
+}
+
+/* Modal Header Refinement */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #1e293b;
+  color: white;
+  border-bottom: 1px solid #334155;
+  z-index: 100;
+}
+
+.modal-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.btn--close {
+  background: #ef4444;
+  color: white;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-left: 12px;
+}
+
+.btn--close:hover {
+  background: #dc2626;
+}
+
+/* Ensure buttons are visible in dark modal */
+.modal-controls .btn {
+  padding: 8px 16px;
+  font-size: 0.9rem;
+}
+
+/* Absolute Force Visibility for Modal Controls */
+.modal-overlay {
+  z-index: 9999 !important;
+}
+
+.modal-content {
+  z-index: 10000 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.modal-header {
+  position: relative !important;
+  z-index: 10001 !important;
+  background: #0f172a !important;
+  /* Deep Navy */
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.modal-controls {
+  display: flex !important;
+  gap: 15px !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Force buttons to be visible against dark background */
+.modal-controls .btn {
+  background: #334155 !important;
+  color: #f8fafc !important;
+  border: 1px solid #475569 !important;
+}
+
+.modal-controls .btn--primary {
+  background: #2563eb !important;
+  border-color: #3b82f6 !important;
+}
+
+.modal-controls .btn--active {
+  background: #1e40af !important;
+  border-color: #3b82f6 !important;
 }

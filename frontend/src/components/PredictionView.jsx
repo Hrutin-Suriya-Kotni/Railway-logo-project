@@ -1,7 +1,15 @@
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
-function PredictionView({ image_url, detected_image_url, showBoxes, fullHeight = false }) {
+function PredictionView({ image_url, detected_image_url, showBoxes, fullHeight = false, interactive = true }) {
   const currentImage = showBoxes ? detected_image_url : image_url;
+
+  if (!interactive) {
+    return (
+      <div className="prediction-view prediction-view--static">
+        <img src={currentImage} alt="Preview" className="prediction-image" style={{ width: '100%', height: 'auto', display: 'block' }} />
+      </div>
+    );
+  }
 
   return (
     <div className={`prediction-view ${fullHeight ? "prediction-view--full" : ""}`}>
