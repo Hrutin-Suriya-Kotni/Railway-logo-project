@@ -11,7 +11,7 @@ from utils.filesystem import ensure_dir
 import torch
 import torchvision.ops as ops
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 
 try:
     from ultralytics import YOLO
@@ -20,11 +20,17 @@ except ImportError:  # pragma: no cover - optional dependency
 
 logger = logging.getLogger(__name__)
 
-# Slicing config
+# Configuration matching refined logic
 SLICE_WIDTH = 1000
 SLICE_HEIGHT = 1000
 OVERLAP = 200
+CONF_THRESHOLD = 0.25
 NMS_THRESHOLD = 0.3
+
+def preprocess_image(image: Image.Image) -> Image.Image:
+    """Converts image to Black and White (Grayscale) for consistency matching refined logic."""
+    bw_image = ImageOps.grayscale(image)
+    return bw_image.convert("RGB")
 
 
 def get_slices(width: int, height: int, sw: int, sh: int, overlap: int):
@@ -54,8 +60,20 @@ def apply_nms(boxes, scores, iou_threshold=NMS_THRESHOLD):
     return boxes[keep], scores[keep]
 
 
+def get_device() -> str:
+    """Detect available hardware acceleration (CUDA, MPS, or CPU)."""
+    if torch.cuda.is_available():
+        return "cuda"
+    if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        return "mps"
+    return "cpu"
+
 def run_sliced_inference(image: Image.Image, model: object) -> List[Dict[str, object]]:
     """Run YOLO on slices and merge results with class preservation."""
+    device = get_device()
+    # 1. Apply B&W preprocessing before slicing
+    image_bw = preprocess_image(image)
+    
     w, h = image.size
     slices = get_slices(w, h, SLICE_WIDTH, SLICE_HEIGHT, OVERLAP)
     
@@ -64,9 +82,9 @@ def run_sliced_inference(image: Image.Image, model: object) -> List[Dict[str, ob
     all_cls = []
 
     for x1, y1, x2, y2 in slices:
-        patch = image.crop((x1, y1, x2, y2))
-        # Use imgsz=640 to match training for best accuracy on patches
-        results = model.predict(patch, verbose=False, imgsz=640)
+        patch = image_bw.crop((x1, y1, x2, y2))
+        # Use explicit device for hardware acceleration
+        results = model.predict(patch, conf=CONF_THRESHOLD, verbose=False, imgsz=640, device=device)
         
         for res in results:
             if not hasattr(res, "boxes") or res.boxes is None:
@@ -94,7 +112,6 @@ def run_sliced_inference(image: Image.Image, model: object) -> List[Dict[str, ob
     classes_tensor = torch.tensor(all_cls)
     
     # Run NMS per class for cleaner results (Standard YOLO behavior)
-    # We use batched_nms to handle multiple classes correctly
     keep = ops.batched_nms(boxes_tensor, scores_tensor, classes_tensor, NMS_THRESHOLD)
     
     merged_boxes = boxes_tensor[keep]
@@ -136,7 +153,9 @@ def get_model() -> Optional[object]:
             if not MODEL_PATH.exists():
                 logger.error(f"Model file not found at {MODEL_PATH}")
                 return None
-            _MODEL = YOLO(str(MODEL_PATH))
+            device = get_device()
+            logger.info(f"Loading YOLO model on {device}...")
+            _MODEL = YOLO(str(MODEL_PATH)).to(device)
     return _MODEL
 
 

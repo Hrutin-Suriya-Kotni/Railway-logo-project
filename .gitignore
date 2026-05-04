@@ -6,9 +6,11 @@ dist/
 build/
 .DS_Store
 
-backend/test_sathi.py
-backend/storage/images/
-backend/storage/results/
-backend/storage/uploads/
+backend/storage/
 backend/test_results/
 backend/test_sathi.py
+backend/images/
+**/model/*.pt
+**/model/*.onnx
+**/__pycache__/
+.DS_Store

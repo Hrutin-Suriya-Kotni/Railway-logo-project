@@ -38,23 +38,6 @@ function PredictionGallery({ pages, resultsUrl, totalPagesOriginal }) {
     <section className="gallery">
       <header className="gallery__header">
         <h2>Results Gallery</h2>
-        <div className="gallery__controls">
-          <button
-            className={`btn ${viewMode === "original" ? "btn--active" : ""}`}
-            onClick={() => setViewMode("original")}
-          >
-            Original
-          </button>
-          <button
-            className={`btn ${viewMode === "compare" ? "btn--active" : ""}`}
-            onClick={() => setViewMode("compare")}
-          >
-            Compare
-          </button>
-          <button className="btn btn--primary" onClick={handleDownload}>
-            Download Predictions
-          </button>
-        </div>
       </header>
 
       {totalPagesOriginal > 1 && (
@@ -69,21 +52,16 @@ function PredictionGallery({ pages, resultsUrl, totalPagesOriginal }) {
             <div className="prediction-item__info">
               <div className="prediction-item__header">
                 <h3>Page {pageData.page}</h3>
-                <button
-                  className="btn btn--primary btn--sm"
-                  onClick={() => downloadImage(`${API_BASE_URL}${pageData.detected_image_url}`, `page_${pageData.page}_detections.jpg`)}
-                >
-                  Download Image with Boxes
-                </button>
               </div>
-              <p>{pageData.detections.length} objects detected. Click image for detailed view.</p>
+              <p>{pageData.detections.length} objects detected. Click image for detailed inspection.</p>
             </div>
             <div className="prediction-item__preview" onClick={() => setSelectedPage(pageData)}>
               <PredictionView
                 image_url={`${API_BASE_URL}${pageData.image_url}`}
                 detected_image_url={`${API_BASE_URL}${pageData.detected_image_url}`}
                 detections={pageData.detections}
-                showBoxes={viewMode === "compare"}
+                showBoxes={true}
+                interactive={false}
               />
             </div>
           </div>

@@ -4,3 +4,5 @@ pdf2image
 pillow
 python-multipart
 ultralytics
+torch
+torchvision

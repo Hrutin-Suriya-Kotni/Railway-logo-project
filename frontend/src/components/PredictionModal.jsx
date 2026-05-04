@@ -31,16 +31,16 @@ function PredictionModal({ pageData, apiBaseUrl, onClose }) {
               className={`btn ${!showBoxes ? "btn--active" : ""}`}
               onClick={() => setShowBoxes(!showBoxes)}
             >
-              {showBoxes ? "Show Original" : "Show Compare"}
+              {showBoxes ? "View Original" : "View Boxes"}
             </button>
             <button
               className="btn btn--primary"
               onClick={() => triggerDownload(`${apiBaseUrl}${pageData.detected_image_url}`, `page_${pageData.page}_detections.jpg`)}
             >
-              Download Image
+              Download High-Res
             </button>
-            <button className="btn btn--close" onClick={onClose}>
-              &times;
+            <button className="btn btn--secondary" onClick={onClose}>
+              ← Back to Gallery
             </button>
           </div>
         </header>
