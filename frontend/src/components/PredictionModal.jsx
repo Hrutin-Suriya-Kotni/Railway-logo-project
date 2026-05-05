@@ -1,12 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PredictionView from "./PredictionView";
 
 function PredictionModal({ pageData, apiBaseUrl, onClose }) {
   const [showBoxes, setShowBoxes] = useState(true);
   const [zoom, setZoom] = useState(1.0);
 
-  const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.25, 4.0));
-  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.25, 0.5));
+  // Handle Lifecycle: Scroll Lock & Wheel Zoom
+  useEffect(() => {
+    // 1. Lock Background Scroll
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    // 2. Wheel Zoom Logic (Ctrl + Wheel)
+    const handleWheel = (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.1 : 0.1;
+        setZoom(prev => Math.min(Math.max(prev + delta, 0.25), 10.0));
+      }
+    };
+
+    const modalContent = document.querySelector(".prediction-view--full");
+    if (modalContent) {
+      modalContent.addEventListener("wheel", handleWheel, { passive: false });
+    }
+
+    return () => {
+      // Cleanup
+      document.body.style.overflow = originalOverflow || "auto";
+      if (modalContent) {
+        modalContent.removeEventListener("wheel", handleWheel);
+      }
+    };
+  }, []);
+
+  const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.5, 10.0));
+  const handleZoomOut = () => setZoom(prev => Math.max(prev - 0.5, 0.25));
   const handleResetZoom = () => setZoom(1.0);
 
   const triggerDownload = async (url, filename) => {

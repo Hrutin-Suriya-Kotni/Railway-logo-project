@@ -390,7 +390,8 @@ body {
   height: 100%;
   width: 100%;
   overflow: scroll !important; /* Force scrollbars always */
-  display: block;
+  display: grid;
+  place-items: center;
 }
 
 /* Custom Scrollbar Styling for better visibility */
@@ -417,9 +418,8 @@ body {
 .prediction-container {
   position: relative;
   display: inline-block; /* Allow container to be larger than parent */
-  min-width: 100%;
   line-height: 0;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .btn--loading {

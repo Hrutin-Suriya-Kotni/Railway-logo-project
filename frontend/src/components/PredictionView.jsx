@@ -15,8 +15,7 @@ function PredictionView({ image_url, detected_image_url, showBoxes, zoom = 1, fu
         className="prediction-container" 
         style={{ 
           width: `${zoom * 100}%`,
-          transition: 'width 0.2s ease-in-out',
-          margin: '0 auto'
+          transition: 'width 0.2s ease-in-out'
         }}
       >
         <img
