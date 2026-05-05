@@ -44,19 +44,13 @@ def draw_detections(image, detections):
         # Draw thick box for high-res images (8px thickness)
         draw.rectangle([x1, y1, x2, y2], outline="#ef4444", width=8)
         
-        # Draw label background
-        # Include coordinates in the label as requested
-        label_text = f"{det['label']} {det['confidence']:.2f} ({int(x1)},{int(y1)})"
-        
-        # Determine label position (put inside box if too close to top)
-        text_y = y1 - 50 if y1 > 60 else y1 + 10
-        
-        if hasattr(draw, "textbbox"):
-            l, t, r, b = draw.textbbox((x1, text_y), label_text, font=font)
-            # Add some padding to background
-            draw.rectangle([l-10, t-5, r+10, b+5], fill="#ef4444")
-        
-        draw.text((x1, text_y), label_text, fill="white", font=font)
+        # Labels and confidence scores are hidden as per user request
+        # label_text = f"{det['label']} {det['confidence']:.2f} ({int(x1)},{int(y1)})"
+        # text_y = y1 - 50 if y1 > 60 else y1 + 10
+        # if hasattr(draw, "textbbox"):
+        #     l, t, r, b = draw.textbbox((x1, text_y), label_text, font=font)
+        #     draw.rectangle([l-10, t-5, r+10, b+5], fill="#ef4444")
+        # draw.text((x1, text_y), label_text, fill="white", font=font)
         
     return draw_img
 
