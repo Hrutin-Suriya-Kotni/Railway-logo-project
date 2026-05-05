@@ -56,6 +56,7 @@ def apply_nms(boxes, scores, iou_threshold=NMS_THRESHOLD):
     """Merge overlapping boxes from different patches."""
     if len(boxes) == 0:
         return boxes, scores
+    # boxes should be [N, 4] tensor, scores [N] tensor
     keep = ops.nms(boxes, scores, iou_threshold)
     return boxes[keep], scores[keep]
 
@@ -69,8 +70,7 @@ def get_device() -> str:
     return "cpu"
 
 def run_sliced_inference(image: Image.Image, model: object) -> List[Dict[str, object]]:
-    """Run YOLO on slices and merge results with class preservation."""
-    device = get_device()
+    """Run YOLO on slices and merge results exactly like yolo_refined_slicing_logic.py."""
     # 1. Apply B&W preprocessing before slicing
     image_bw = preprocess_image(image)
     
@@ -79,21 +79,19 @@ def run_sliced_inference(image: Image.Image, model: object) -> List[Dict[str, ob
     
     all_boxes = []
     all_scores = []
-    all_cls = []
 
     for x1, y1, x2, y2 in slices:
         patch = image_bw.crop((x1, y1, x2, y2))
-        # Use explicit device for hardware acceleration
-        results = model.predict(patch, conf=CONF_THRESHOLD, verbose=False, imgsz=640, device=device)
+        # Run YOLO prediction with identical parameters to local script
+        results = model.predict(patch, conf=CONF_THRESHOLD, verbose=False)
         
         for res in results:
             if not hasattr(res, "boxes") or res.boxes is None:
                 continue
             boxes = res.boxes.xyxy.cpu()
             scores = res.boxes.conf.cpu()
-            classes = res.boxes.cls.cpu()
             
-            for box, score, cls in zip(boxes, scores, classes):
+            for box, score in zip(boxes, scores):
                 # Offset boxes back to global coordinates
                 global_box = box.clone()
                 global_box[0] += x1
@@ -102,29 +100,23 @@ def run_sliced_inference(image: Image.Image, model: object) -> List[Dict[str, ob
                 global_box[3] += y1
                 all_boxes.append(global_box)
                 all_scores.append(score)
-                all_cls.append(cls)
     
     if not all_boxes:
         return []
 
     boxes_tensor = torch.stack(all_boxes)
     scores_tensor = torch.tensor(all_scores)
-    classes_tensor = torch.tensor(all_cls)
     
-    # Run NMS per class for cleaner results (Standard YOLO behavior)
-    keep = ops.batched_nms(boxes_tensor, scores_tensor, classes_tensor, NMS_THRESHOLD)
-    
-    merged_boxes = boxes_tensor[keep]
-    merged_scores = scores_tensor[keep]
-    merged_classes = classes_tensor[keep]
+    # Run NMS exactly like the local script
+    merged_boxes, merged_scores = apply_nms(boxes_tensor, scores_tensor)
     
     detections: List[Dict[str, object]] = []
-    names = getattr(model, "names", {})
+    # Local script labels everything as "RCC_logo"
     
-    for box, score, cls in zip(merged_boxes, merged_scores, merged_classes):
+    for box, score in zip(merged_boxes, merged_scores):
         x1, y1, x2, y2 = box.tolist()
         detections.append({
-            "label": _label_for(names, int(cls)),
+            "label": "RCC_logo",
             "confidence": round(float(score), 3),
             "bbox": {
                 "x": round(x1 / w, 4),

@@ -382,7 +382,6 @@ body {
   flex: 1;
   overflow: hidden;
   background: #111827;
-  /* Darker background for focus */
   display: flex;
   flex-direction: column;
 }
@@ -390,14 +389,37 @@ body {
 .prediction-view--full {
   height: 100%;
   width: 100%;
+  overflow: scroll !important; /* Force scrollbars always */
+  display: block;
+}
+
+/* Custom Scrollbar Styling for better visibility */
+.prediction-view--full::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+.prediction-view--full::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+.prediction-view--full::-webkit-scrollbar-thumb {
+  background: #475569;
+  border: 3px solid #1e293b;
+  border-radius: 10px;
+}
+
+.prediction-view--full::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
 }
 
 .prediction-container {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block; /* Allow container to be larger than parent */
+  min-width: 100%;
   line-height: 0;
+  margin: 0 auto;
 }
 
 .btn--loading {
