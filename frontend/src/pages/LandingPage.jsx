@@ -5,29 +5,28 @@ function LandingPage() {
     <div className="landing-page">
       <section className="hero">
         <div className="hero__content">
-          <h1 className="hero__title">CHITRA AI</h1>
-          <h2 className="hero__subtitle">Vision Intelligence for the Modern Rail</h2>
+          <h1 className="hero__title">AAHANA</h1>
+          <h2 className="hero__subtitle">Digital Transformation & Vision Intelligence</h2>
           
           <div className="hero__elaborate-copy">
+            <h3>Ahana Systems and Solutions Pvt. Ltd.</h3>
             <p>
-              <strong>CHITRA</strong> (Computerized High-speed Image & Technical-drawing Recognition Architecture) 
-              is an enterprise-grade vision platform engineered specifically for the precision demands 
-              of the railway industry. 
+              Ahana Systems and Solutions Pvt. Ltd. is a Bengaluru-based IT services and consulting firm founded in 2007, 
+              focused on helping organizations with digital transformation. The company provides solutions in cloud 
+              computing, data analytics, automation, application development, and managed IT services.
             </p>
             <p>
-              By leveraging specialized neural networks, CHITRA automates the identification of critical 
-              infrastructure components within complex technical diagrams and high-resolution site documentation. 
-              Our technology transforms hours of manual cross-referencing into seconds of automated, 
-              high-fidelity precision.
+              With a strong global presence across India, the US, UK, and Europe, Ahana supports businesses in 
+              improving operational efficiency and reducing manual effort. It serves industries such as banking, 
+              manufacturing, logistics, and healthcare. Known for its customer-centric approach, Ahana delivers 
+              scalable and cost-effective technology solutions. The company emphasizes innovation, quality, 
+              and long-term partnerships.
             </p>
           </div>
 
           <div className="hero__actions">
-            <Link to="/samples" className="btn btn--large btn--glass">
-              Explore Sample Data
-            </Link>
             <Link to="/demo" className="btn btn--large btn--primary">
-              Launch Live Demo
+              Try Demo
             </Link>
           </div>
         </div>
@@ -36,18 +35,18 @@ function LandingPage() {
       <section className="features">
         <div className="feature-card">
           <div className="feature-icon">🎯</div>
-          <h3>High Precision</h3>
-          <p>Meticulously trained YOLO models for 99%+ detection accuracy on railway symbology.</p>
+          <h3>Advanced Computer Vision</h3>
+          <p>Utilizing fine-tuned advanced computer vision models for mission-critical infrastructure detection.</p>
         </div>
         <div className="feature-card">
           <div className="feature-icon">⚡</div>
-          <h3>Instant Analysis</h3>
-          <p>Convert days of manual diagram auditing into seconds of real-time AI insight.</p>
+          <h3>Operational Efficiency</h3>
+          <p>Dramatically reduce manual effort and improve auditing speed across all technical documentation.</p>
         </div>
         <div className="feature-card">
-          <div className="feature-icon">📄</div>
-          <h3>Format Agnostic</h3>
-          <p>Seamlessly process architectural PDFs, high-res JPEGs, and technical SIP charts.</p>
+          <div className="feature-icon">🌐</div>
+          <h3>Global Scalability</h3>
+          <p>Scalable IT solutions delivered with a customer-centric approach across multiple global markets.</p>
         </div>
       </section>
     </div>

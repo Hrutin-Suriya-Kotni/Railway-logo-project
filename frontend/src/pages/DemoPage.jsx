@@ -2,15 +2,16 @@ import { useState, useCallback } from "react";
 import UploadForm from "../components/UploadForm";
 import ProgressDisplay from "../components/ProgressDisplay";
 import PredictionGallery from "../components/PredictionGallery";
+import PdfModal from "../components/PdfModal";
 import useJobWebSocket from "../hooks/useJobWebSocket";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-const REFERENCE_FILES = [
-  { name: "Signal Aspect Block (Test)", url: "/demo_files/SIGNAL ASPECT BLOCK.pdf" },
-  { name: "Semra PH-2 SIP (Test)", url: "/demo_files/SEMRA PH-2_SIP.pdf" },
-  { name: "Sathi SIP (Test)", url: "/demo_files/Sathi_SIP.pdf" },
-  { name: "Thalwara Mod RCC (Test)", url: "/demo_files/Thalwara Mod_RCC.pdf" },
+const SAMPLE_FILES = [
+  { name: "Signal Aspect Block", filename: "SIGNAL ASPECT BLOCK.pdf", url: "/demo_files/SIGNAL ASPECT BLOCK.pdf" },
+  { name: "Semra PH-2 SIP", filename: "SEMRA PH-2_SIP.pdf", url: "/demo_files/SEMRA PH-2_SIP.pdf" },
+  { name: "Sathi SIP", filename: "Sathi_SIP.pdf", url: "/demo_files/Sathi_SIP.pdf" },
+  { name: "Thalwara Mod RCC", filename: "Thalwara Mod_RCC.pdf", url: "/demo_files/Thalwara Mod_RCC.pdf" },
 ];
 
 function DemoPage() {
@@ -21,6 +22,7 @@ function DemoPage() {
   const [resultData, setResultData] = useState(null);
   const [resultPath, setResultPath] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [previewPdf, setPreviewPdf] = useState(null);
 
   const WS_BASE_URL = API_BASE_URL.replace(/^http/, "ws");
 
@@ -51,6 +53,20 @@ function DemoPage() {
       setStatus("idle");
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleSampleAnalyze = async (sampleUrl, sampleName) => {
+    try {
+      setStatus("fetching-sample");
+      const response = await fetch(sampleUrl);
+      if (!response.ok) throw new Error("Failed to fetch sample.");
+      const blob = await response.blob();
+      const file = new File([blob], sampleName, { type: "application/pdf" });
+      handleUpload(file);
+    } catch (err) {
+      setError("Failed to process sample file. Please try manual upload.");
+      setStatus("idle");
     }
   };
 
@@ -96,23 +112,26 @@ function DemoPage() {
     <div className="demo-page">
       <header className="page-header">
         <h1>Live AI Intelligence Demo</h1>
-        <p>Upload your own technical documentation or use our reference files below to witness real-time infrastructure detection.</p>
+        <p>Analyze your infrastructure documentation using our fine-tuned advanced computer vision models.</p>
       </header>
 
       <div className="demo-layout">
         <div className="demo-main">
           <section className="demo-section uploader-card">
-            <h2>1. Upload Infrastructure Documentation</h2>
-            {(status === "idle" || status === "processing") ? (
+            <h2>1. Document Analysis</h2>
+            {(status === "idle" || status === "processing" || status === "uploading" || status === "fetching-sample") ? (
               <UploadForm onUpload={handleUpload} disabled={isUploading || status === "processing"} />
             ) : (
-              <button onClick={handleReset} className="btn btn--secondary">Upload Another File</button>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <button onClick={handleReset} className="btn btn--secondary">Upload Another File</button>
+                <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Job Completed successfully.</span>
+              </div>
             )}
-
-            {(jobId || isUploading) && (
-              <ProgressDisplay
-                status={status}
-                progress={progress}
+            
+            {(jobId || isUploading || status === "fetching-sample") && (
+              <ProgressDisplay 
+                status={status === "fetching-sample" ? "processing" : status} 
+                progress={progress} 
                 jobId={jobId}
                 connectionState={connectionState}
                 resultPath={resultPath}
@@ -129,9 +148,9 @@ function DemoPage() {
 
           {status === "done" && resultData && (
             <section className="demo-section results-container">
-              <h2>2. AI Detection Results</h2>
-              <PredictionGallery
-                pages={resultData.pages}
+              <h2>2. Analysis Results</h2>
+              <PredictionGallery 
+                pages={resultData.pages} 
                 resultsUrl={resultPath}
                 totalPagesOriginal={resultData.total_pages_original}
               />
@@ -141,20 +160,41 @@ function DemoPage() {
 
         <aside className="demo-sidebar">
           <div className="reference-card">
-            <h3>Reference Materials</h3>
-            <p>Don't have a file? Open these in a new tab to see the originals, then save and upload them here.</p>
-            <ul className="reference-list">
-              {REFERENCE_FILES.map((file, idx) => (
-                <li key={idx}>
-                  <a href={file.url} target="_blank" rel="noopener noreferrer" className="reference-link">
-                    📄 {file.name}
-                  </a>
-                </li>
+            <h3>Sample Files</h3>
+            <p>Select a sample file to analyze immediately or preview the original document.</p>
+            <div className="sample-files-list">
+              {SAMPLE_FILES.map((file, idx) => (
+                <div key={idx} className="sample-file-item">
+                  <div className="sample-file-name">📄 {file.name}</div>
+                  <div className="sample-file-actions">
+                    <button 
+                      className="btn btn--sm btn--primary" 
+                      onClick={() => handleSampleAnalyze(file.url, file.filename)}
+                      disabled={status !== "idle" && status !== "done"}
+                    >
+                      Analyze
+                    </button>
+                    <button 
+                      className="btn btn--sm btn--secondary" 
+                      onClick={() => setPreviewPdf(file)}
+                    >
+                      View
+                    </button>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </aside>
       </div>
+
+      {previewPdf && (
+        <PdfModal 
+          url={previewPdf.url} 
+          title={previewPdf.name} 
+          onClose={() => setPreviewPdf(null)} 
+        />
+      )}
     </div>
   );
 }
