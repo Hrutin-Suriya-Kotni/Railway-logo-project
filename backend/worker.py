@@ -140,4 +140,5 @@ async def process_job(
         status="done",
         progress=100,
         result_path=str(result_path),
+        pages=payload["pages"],
     )

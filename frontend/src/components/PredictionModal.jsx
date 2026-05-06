@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import PredictionView from "./PredictionView";
 
-function PredictionModal({ pageData, apiBaseUrl, onClose }) {
-  const [showBoxes, setShowBoxes] = useState(true);
+function PredictionModal({ pageData, apiBaseUrl, onClose, isStatic = false }) {
+  const [showBoxes, setShowBoxes] = useState(!isStatic);
   const [zoom, setZoom] = useState(1.0);
 
   // Handle Lifecycle: Scroll Lock & Wheel Zoom
@@ -59,7 +59,7 @@ function PredictionModal({ pageData, apiBaseUrl, onClose }) {
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <header className="modal-header">
-          <h3>Page {pageData.page} - Detailed View</h3>
+          <h3>{isStatic ? "Sample Inspection" : `Page ${pageData.page}`} - {pageData.page}</h3>
           <div className="modal-controls">
             <div className="zoom-controls" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '16px', borderRight: '1px solid #475569', paddingRight: '16px' }}>
               <button className="btn btn--sm" onClick={handleZoomOut} title="Zoom Out">-</button>
@@ -67,28 +67,34 @@ function PredictionModal({ pageData, apiBaseUrl, onClose }) {
               <button className="btn btn--sm" onClick={handleZoomIn} title="Zoom In">+</button>
               <button className="btn btn--sm" onClick={handleResetZoom}>Reset</button>
             </div>
-            <button
-              className={`btn ${!showBoxes ? "btn--active" : ""}`}
-              onClick={() => setShowBoxes(!showBoxes)}
-            >
-              {showBoxes ? "View Original" : "View Boxes"}
-            </button>
-            <button
-              className="btn btn--primary"
-              onClick={() => triggerDownload(`${apiBaseUrl}${pageData.detected_image_url}`, `page_${pageData.page}_detections.jpg`)}
-            >
-              Download
-            </button>
+            
+            {!isStatic && (
+              <>
+                <button
+                  className={`btn ${!showBoxes ? "btn--active" : ""}`}
+                  onClick={() => setShowBoxes(!showBoxes)}
+                >
+                  {showBoxes ? "View Original" : "View Boxes"}
+                </button>
+                <button
+                  className="btn btn--primary"
+                  onClick={() => triggerDownload(`${apiBaseUrl}${pageData.detected_image_url}`, `page_${pageData.page}_detections.jpg`)}
+                >
+                  Download
+                </button>
+              </>
+            )}
+            
             <button className="btn btn--secondary" onClick={onClose}>
-              ← Back
+              {isStatic ? "Close" : "← Back"}
             </button>
           </div>
         </header>
 
         <div className="modal-body">
           <PredictionView
-            image_url={`${apiBaseUrl}${pageData.image_url}`}
-            detected_image_url={`${apiBaseUrl}${pageData.detected_image_url}`}
+            image_url={isStatic ? pageData.image_url : `${apiBaseUrl}${pageData.image_url}`}
+            detected_image_url={isStatic ? pageData.image_url : `${apiBaseUrl}${pageData.detected_image_url}`}
             showBoxes={showBoxes}
             zoom={zoom}
             fullHeight={true}

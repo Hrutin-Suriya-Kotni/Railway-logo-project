@@ -20,6 +20,7 @@ class JobInfo:
     status: str
     progress: int
     result_path: Optional[str] = None
+    pages: Optional[list[Dict[str, Any]]] = None
 
     def to_dict(self) -> Dict[str, object]:
         payload = {
@@ -27,6 +28,7 @@ class JobInfo:
             "status": self.status,
             "progress": self.progress,
             "result_path": self.result_path,
+            "pages": self.pages,
         }
         if self.status == "done":
             payload["event"] = "completed"
@@ -61,6 +63,7 @@ class JobStore:
         status: Optional[str] = None,
         progress: Optional[int] = None,
         result_path: object = _UNSET,
+        pages: Optional[list[Dict[str, Any]]] = None,
     ) -> Optional[JobInfo]:
         async with self._lock:
             job = self._jobs.get(job_id)
@@ -72,6 +75,8 @@ class JobStore:
                 job.progress = progress
             if result_path is not _UNSET:
                 job.result_path = result_path  # type: ignore[assignment]
+            if pages is not None:
+                job.pages = pages
             connections = list(self._connections.get(job_id, set()))
             snapshot = job.to_dict()
         await self._broadcast(connections, snapshot)

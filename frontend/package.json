@@ -11,6 +11,7 @@
   "dependencies": {
     "react": "latest",
     "react-dom": "latest",
+    "react-router-dom": "^7.15.0",
     "react-zoom-pan-pinch": "^4.0.3"
   },
   "devDependencies": {

@@ -47,7 +47,7 @@ function PredictionGallery({ pages, resultsUrl, totalPagesOriginal }) {
       )}
 
       <div className="gallery__list">
-        {pages.map((pageData) => (
+        {pages?.map((pageData) => (
           <div key={pageData.page} className="prediction-item">
             <div className="prediction-item__info">
               <div className="prediction-item__header">
