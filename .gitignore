@@ -1,5 +1,8 @@
-model/
-node_modules/
+# Production Assets (Large Files)
+frontend/public/results/
+frontend/public/demo_files/
+frontend/public/demo_images/
+backend/storage/
 __pycache__/
 .env
 dist/

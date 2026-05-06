@@ -2,16 +2,16 @@ import { useState, useCallback } from "react";
 import UploadForm from "../components/UploadForm";
 import ProgressDisplay from "../components/ProgressDisplay";
 import PredictionGallery from "../components/PredictionGallery";
-import PdfModal from "../components/PdfModal";
+import PredictionModal from "../components/PredictionModal";
 import useJobWebSocket from "../hooks/useJobWebSocket";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const SAMPLE_FILES = [
-  { name: "Signal Aspect Block", filename: "SIGNAL ASPECT BLOCK.pdf", url: "/demo_files/SIGNAL ASPECT BLOCK.pdf" },
-  { name: "Semra PH-2 SIP", filename: "SEMRA PH-2_SIP.pdf", url: "/demo_files/SEMRA PH-2_SIP.pdf" },
-  { name: "Sathi SIP", filename: "Sathi_SIP.pdf", url: "/demo_files/Sathi_SIP.pdf" },
-  { name: "Thalwara Mod RCC", filename: "Thalwara Mod_RCC.pdf", url: "/demo_files/Thalwara Mod_RCC.pdf" },
+  { name: "Approved SIP Anpra", filename: "Approved SIP of ANPRA.pdf", url: "/demo_files/Approved SIP of ANPRA.pdf", imageUrl: "/demo_images/ANPRA.jpg" },
+  { name: "Balamau SIP", filename: "Balamau_SIP.pdf", url: "/demo_files/Balamau_SIP.pdf", imageUrl: "/demo_images/Balamau.jpg" },
+  { name: "Bhuchchu SIP", filename: "BHUCHCHU_SIP.pdf", url: "/demo_files/BHUCHCHU_SIP.pdf", imageUrl: "/demo_images/BHUCHCHU.jpg" },
+  { name: "Pahleza SIP", filename: "PAHLEZA_SIP.pdf", url: "/demo_files/PAHLEZA_SIP.pdf", imageUrl: "/demo_images/PAHLEZA.jpg" },
 ];
 
 function DemoPage() {
@@ -22,7 +22,7 @@ function DemoPage() {
   const [resultData, setResultData] = useState(null);
   const [resultPath, setResultPath] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-  const [previewPdf, setPreviewPdf] = useState(null);
+  const [selectedSample, setSelectedSample] = useState(null);
 
   const WS_BASE_URL = API_BASE_URL.replace(/^http/, "ws");
 
@@ -118,13 +118,13 @@ function DemoPage() {
       <div className="demo-layout">
         <div className="demo-main">
           <section className="demo-section uploader-card">
-            <h2>1. Document Analysis</h2>
+            <h2>Document Analysis</h2>
             {(status === "idle" || status === "processing" || status === "uploading" || status === "fetching-sample") ? (
               <UploadForm onUpload={handleUpload} disabled={isUploading || status === "processing"} />
             ) : (
-              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                <button onClick={handleReset} className="btn btn--secondary">Upload Another File</button>
-                <span style={{ color: '#64748b', fontSize: '0.9rem' }}>Job Completed successfully.</span>
+              <div className="demo-actions--reset">
+                <button onClick={handleReset} className="btn btn--primary btn--reset">Upload Another File</button>
+                <span className="demo-status-text">Job Completed successfully.</span>
               </div>
             )}
             
@@ -148,7 +148,7 @@ function DemoPage() {
 
           {status === "done" && resultData && (
             <section className="demo-section results-container">
-              <h2>2. Analysis Results</h2>
+              <h2>RESULTS</h2>
               <PredictionGallery 
                 pages={resultData.pages} 
                 resultsUrl={resultPath}
@@ -170,13 +170,13 @@ function DemoPage() {
                     <button 
                       className="btn btn--sm btn--primary" 
                       onClick={() => handleSampleAnalyze(file.url, file.filename)}
-                      disabled={status !== "idle" && status !== "done"}
+                      disabled={status !== "idle" && status !== "processing"}
                     >
                       Analyze
                     </button>
                     <button 
                       className="btn btn--sm btn--secondary" 
-                      onClick={() => setPreviewPdf(file)}
+                      onClick={() => setSelectedSample(file)}
                     >
                       View
                     </button>
@@ -188,11 +188,17 @@ function DemoPage() {
         </aside>
       </div>
 
-      {previewPdf && (
-        <PdfModal 
-          url={previewPdf.url} 
-          title={previewPdf.name} 
-          onClose={() => setPreviewPdf(null)} 
+      {selectedSample && (
+        <PredictionModal 
+          pageData={{
+            page: selectedSample.name,
+            image_url: selectedSample.imageUrl,
+            detected_image_url: selectedSample.imageUrl,
+            detections: []
+          }}
+          apiBaseUrl=""
+          isStatic={true}
+          onClose={() => setSelectedSample(null)} 
         />
       )}
     </div>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import PredictionView from "./PredictionView";
 
 function PredictionModal({ pageData, apiBaseUrl, onClose, isStatic = false }) {
-  const [showBoxes, setShowBoxes] = useState(!isStatic);
+  const [showBoxes, setShowBoxes] = useState(isStatic ? true : !isStatic);
   const [zoom, setZoom] = useState(1.0);
 
   // Handle Lifecycle: Scroll Lock & Wheel Zoom
@@ -68,21 +68,22 @@ function PredictionModal({ pageData, apiBaseUrl, onClose, isStatic = false }) {
               <button className="btn btn--sm" onClick={handleResetZoom}>Reset</button>
             </div>
             
+            {(pageData.detected_image_url && pageData.detected_image_url !== pageData.image_url) && (
+              <button
+                className={`btn ${showBoxes ? "btn--active" : ""}`}
+                onClick={() => setShowBoxes(!showBoxes)}
+              >
+                {showBoxes ? "View Original" : "Compare Results"}
+              </button>
+            )}
+
             {!isStatic && (
-              <>
-                <button
-                  className={`btn ${!showBoxes ? "btn--active" : ""}`}
-                  onClick={() => setShowBoxes(!showBoxes)}
-                >
-                  {showBoxes ? "View Original" : "View Boxes"}
-                </button>
-                <button
-                  className="btn btn--primary"
-                  onClick={() => triggerDownload(`${apiBaseUrl}${pageData.detected_image_url}`, `page_${pageData.page}_detections.jpg`)}
-                >
-                  Download
-                </button>
-              </>
+              <button
+                className="btn btn--primary"
+                onClick={() => triggerDownload(`${apiBaseUrl}${pageData.detected_image_url}`, `page_${pageData.page}_detections.jpg`)}
+              >
+                Download
+              </button>
             )}
             
             <button className="btn btn--secondary" onClick={onClose}>
@@ -94,7 +95,7 @@ function PredictionModal({ pageData, apiBaseUrl, onClose, isStatic = false }) {
         <div className="modal-body">
           <PredictionView
             image_url={isStatic ? pageData.image_url : `${apiBaseUrl}${pageData.image_url}`}
-            detected_image_url={isStatic ? pageData.image_url : `${apiBaseUrl}${pageData.detected_image_url}`}
+            detected_image_url={isStatic ? (pageData.detected_image_url || pageData.image_url) : `${apiBaseUrl}${pageData.detected_image_url}`}
             showBoxes={showBoxes}
             zoom={zoom}
             fullHeight={true}
